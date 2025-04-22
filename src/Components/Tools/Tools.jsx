@@ -28,7 +28,6 @@ export default function Tools({ setTool, stageRef, tools }) {
     >
       <ToggleGroupItem
         value="lock"
-        aria-label="Toggle bold"
         onClick={() => toggleTools("lock")}
       >
         <FontAwesomeIcon icon={faLock} />

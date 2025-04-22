@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -16,8 +16,24 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { Slider } from "../ui/slider";
+import { strokeColorContext } from "../../App";
 
 export default function SideBar({ strokeWidth, setStrokeWidth }) {
+  const { strokeColor, setStrokeColor, sheetColor, setSheetColor } =
+    useContext(strokeColorContext);
+  const strokeColors = ["#000000", "#3B82F6", "#EF4444", "#10B981", "#D946EF"];
+  const sheetColors = ["#ffffff", "#e5e5e5", "#d9f99d", "#fbbf24", "#bfdbfe"];
+
+  const handleStrokeColor = (color) => {
+    setStrokeColor(color);
+    setSelectedStrokeColor(color);
+  };
+
+  const handleSheetColor = (color) => {
+    setSelectedSheetColor(color);
+    setSheetColor(color);
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -32,20 +48,29 @@ export default function SideBar({ strokeWidth, setStrokeWidth }) {
         <div className="py-4 text-gray-400">
           <span className=" ">Stroke Color</span>
           <div className="flex justify-around my-6 cursor-pointer">
-            <div className="border-gray-50 rounded-2xl w-10 h-10 bg-black"></div>
-            <div className="border-gray-50 rounded-2xl w-10 h-10 bg-blue-400"></div>
-            <div className="border-gray-50 rounded-2xl w-10 h-10 bg-amber-300"></div>
-            <div className="border-gray-50 rounded-2xl w-10 h-10 bg-green-500"></div>
-            <div className="border-gray-50 rounded-2xl w-10 h-10 bg-fuchsia-700"></div>
+            {strokeColors.map((color) => {
+              const isSelected = strokeColor === color;
+              return (
+                <div
+                  key={color}
+                  style={{ backgroundColor: color }}
+                  className={`border-4 ${
+                    isSelected
+                      ? "border-gray-400 w-11 h-11 "
+                      : "border-transparent  w-10 h-10"
+                  } rounded-2xl hover:scale-110 `}
+                  onClick={() => handleStrokeColor(color)}
+                ></div>
+              );
+            })}
           </div>
         </div>
         <div className="py-4 text-gray-400 ">
           <span>Stroke</span>
-          {/* <div className='border my-6 cursor-pointer h-2  w-40 rounded-2xl bg-gray-100 '></div> */}
           <Slider
             className={"my-6"}
             defaultValue={[strokeWidth]}
-            max={10}
+            max={30}
             step={1}
             onValueChange={(value) => setStrokeWidth(value)}
           />
@@ -53,11 +78,22 @@ export default function SideBar({ strokeWidth, setStrokeWidth }) {
         <div className="py-4 text-gray-400">
           <span className=" ">Sketch Book Background</span>
           <div className="flex justify-around my-6 cursor-pointer">
-            <div className="border-gray-200 border-2 rounded-2xl w-10 h-10 bg-gray-200"></div>
-            <div className="border-gray-200 border-2 rounded-2xl w-10 h-10 bg-lime-200"></div>
-            <div className="border-gray-200 border-2 rounded-2xl w-10 h-10 bg-amber-200"></div>
-            <div className="border-gray-200 border-2 rounded-2xl w-10 h-10 bg-blue-200"></div>
-            <div className="border-gray-200 border-2 rounded-2xl w-10 h-10 bg-white2"></div>
+            {sheetColors.map((color) => {
+              const isSelected = sheetColor === color;
+
+              return (
+                <div
+                  key={color}
+                  onClick={() => handleSheetColor(color)}
+                  style={{ backgroundColor: color }}
+                  className={` ${
+                    isSelected
+                      ? "border-gray-200 w-11 h-11"
+                      : "border-transparent w-10 h-10"
+                  }  border-4 rounded-2xl `}
+                ></div>
+              );
+            })}
           </div>
         </div>
         <div className=" py-4 flex flex-col gap-5  border-b border-gray-200 text-gray-600">

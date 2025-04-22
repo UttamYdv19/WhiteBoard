@@ -1,16 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Layer, Stage } from "react-konva";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Rect,Layer, Stage } from "react-konva";
 import Pen from "../ShapeCards/Pen";
 import RectangleShape from "../ShapeCards/RectangleShape";
 import CircleShape from "../ShapeCards/CircleShape";
 import ArrowShape from "../ShapeCards/ArrowShape";
 import Eraser from "../ShapeCards/Eraser";
+import { strokeColorContext } from "../../App";
 
 export default function CanvasArea({ tools, strokeWidth, stageRef }) {
   const trRef = useRef();
   const [lines, setLines] = useState([]);
   const [isSelected, setSelected] = useState(false);
   const [selectedShape, setSelectedShape] = useState(null);
+  const {sheetColor} = useContext(strokeColorContext);
   const toolComponents = {
     pen: (
       <Pen
@@ -71,7 +73,16 @@ export default function CanvasArea({ tools, strokeWidth, stageRef }) {
         height={window.innerHeight}
         ref={stageRef}
       >
-        <Layer>
+        <Layer >
+
+        <Rect
+          x={0}
+          y={0}
+          width={window.innerWidth}
+          height={window.innerHeight}
+          fill={sheetColor}
+          listening={false} 
+        />
           {
             tools.map((tool)=>
             (< React.Fragment key={tool}>

@@ -1,14 +1,13 @@
-// Pen.js
-
-import React, { useEffect, useRef } from 'react';
+import { strokeColorContext } from '../../App';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Line } from 'react-konva';
 
 const Pen = ({ stageRef, lines, setLines ,strokeWidth}) => {
   const isDrawing = useRef(false);
+  const {strokeColor}=useContext(strokeColorContext)
 
   useEffect(() => {
     const stage = stageRef.current;
-     console.log(stage);
     const onMouseDown = (e) => {
       isDrawing.current = true;
       const pos = stage.getPointerPosition();
@@ -16,7 +15,7 @@ const Pen = ({ stageRef, lines, setLines ,strokeWidth}) => {
 
       setLines((prevLines) => [
         ...prevLines,
-        { points: [pos.x, pos.y] , mode:'draw',},
+        { points: [pos.x, pos.y] ,strokeWidth, strokeColor,mode:'draw',},
       ]);
     };
 
@@ -48,7 +47,7 @@ const Pen = ({ stageRef, lines, setLines ,strokeWidth}) => {
       stage.off('mousemove', onMouseMove);
       stage.off('mouseup', onMouseUp);
     };
-  }, [stageRef, setLines]);
+  }, [stageRef, setLines,strokeColor,strokeWidth]);
 
   return (
     <>
@@ -57,8 +56,8 @@ const Pen = ({ stageRef, lines, setLines ,strokeWidth}) => {
         <Line
           key={index}
           points={line.points}
-          stroke= 'red'
-          strokeWidth={strokeWidth}
+          stroke= {line.strokeColor}
+          strokeWidth={line.strokeWidth}
           tension={0.5}
           lineCap="round"
           lineJoin="round"

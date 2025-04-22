@@ -14,7 +14,7 @@ export default function Eraser({ stageRef, lines, setLines, strokeWidth }) {
 
       setLines((prev) => [
         ...prev,
-        { points: [pos.x, pos.y], mode: "eraser" },
+        { points: [pos.x, pos.y], strokeWidth,mode: "eraser" },
       ]);
     };
 
@@ -50,7 +50,7 @@ export default function Eraser({ stageRef, lines, setLines, strokeWidth }) {
       stage.off("mousemove", onMouseMove);
       stage.off("mouseup", onMouseUp);
     };
-  }, [stageRef, setLines]);
+  }, [stageRef, setLines,strokeWidth]);
 
   return (
     <>
@@ -61,7 +61,7 @@ export default function Eraser({ stageRef, lines, setLines, strokeWidth }) {
             key={index}
             points={line.points}
             stroke="white"
-            strokeWidth={strokeWidth}
+            strokeWidth={line.strokeWidth}
             tension={0.5}
             lineCap="round"
             lineJoin="round"
