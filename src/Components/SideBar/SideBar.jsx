@@ -26,11 +26,9 @@ export default function SideBar({ strokeWidth, setStrokeWidth }) {
 
   const handleStrokeColor = (color) => {
     setStrokeColor(color);
-    setSelectedStrokeColor(color);
   };
 
   const handleSheetColor = (color) => {
-    setSelectedSheetColor(color);
     setSheetColor(color);
   };
 

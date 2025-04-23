@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLock,
@@ -9,80 +9,73 @@ import {
   faDownload,
   faArrowRight,
   faTrash,
+  faSquareCaretLeft,
+  faSquareCaretRight,
+  faFont,
+  faUsersRectangle,
 } from "@fortawesome/free-solid-svg-icons";
-import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
-import ExportImage from "../Export/ExportImage";
+
+import useExportImage from "../Export/useExportImage";
 
 export default function Tools({ setTool, stageRef, tools }) {
-  const toggleTools = (toolName) => {
-    setTool((prev) => 
-      prev.includes(toolName)
-        ? prev.filter((tool) => tool !== toolName)
-        : [...prev, toolName]
-    );
-  };
-  return (
-    <ToggleGroup
-      type="multiple"
-      className="border-gray-500 shadow-gray-200 shadow-xl flex gap-5 ml-80 p-3 px-4  sticky top-0 "
-    >
-      <ToggleGroupItem
-        value="lock"
-        onClick={() => toggleTools("lock")}
-      >
-        <FontAwesomeIcon icon={faLock} />
-      </ToggleGroupItem>
-      <ToggleGroupItem
-        value="rect"
-        aria-label="Toggle bold"
-        onClick={() => toggleTools("rect")}
-      >
-        <FontAwesomeIcon icon={faSquare} />
-      </ToggleGroupItem>
-      <ToggleGroupItem
-        value="circle"
-        aria-label="Toggle italic"
-        onClick={() => toggleTools("circle")}
-      >
-        <FontAwesomeIcon icon={faCircle} />
-      </ToggleGroupItem>
-      <ToggleGroupItem
-        value="arrow"
-        aria-label="Toggle bold"
-        onClick={() => toggleTools("arrow")}
-      >
-        <FontAwesomeIcon icon={faArrowRight} />
-      </ToggleGroupItem>
-      <ToggleGroupItem
-        value="pen"
-        aria-label="Toggle bold"
-        onClick={() => toggleTools("pen")}
-      >
-        <FontAwesomeIcon icon={faPencil} />
-      </ToggleGroupItem>
-      <ToggleGroupItem
-        value="eraser"
-        aria-label="Toggle italic"
-        onClick={() => toggleTools("eraser")}
-      >
-        <FontAwesomeIcon icon={faEraser} />
-      </ToggleGroupItem>
-      <ToggleGroupItem
-        value="delete"
-        aria-label="Toggle bold"
-        onClick={() => toggleTools("delete")}
-      >
-        <FontAwesomeIcon icon={faTrash} />
-      </ToggleGroupItem>
+  const [selectedItem, setSelectedItem] = useState([]);
+  const [handleExport] = useExportImage(stageRef);
+  const toolItems = [
+    { icon: faLock, id: "lock" },
+    { icon: faSquare, id: "rect" },
+    { icon: faCircle, id: "circle" },
+    { icon: faFont, id: "font" },
+    { icon: faArrowRight, id: "arrow" },
+    { icon: faPencil, id: "pen" },
+    { icon: faEraser, id: "eraser" },
+    { icon: faDownload, id: "download" },
+    { icon: faTrash, id: "trash" },
+    { icon: faSquareCaretLeft, id: "caret-left" },
+    { icon: faSquareCaretRight, id: "caret-right" },
+    { icon: faUsersRectangle, id: "users" },
+  ];
 
-      <ExportImage stageRef={stageRef}>
-        <ToggleGroupItem
-          value="download"
-          aria-label="Toggle strikethrough"
-        >
-          <FontAwesomeIcon icon={faDownload} />
-        </ToggleGroupItem>
-      </ExportImage>
-    </ToggleGroup>
+  const toggleTools = (id) => {
+    if (id === faDownload) {
+      handleExport();
+      return;
+    }
+
+    setSelectedItem((prev) =>
+      prev.includes(id)
+        ? prev.filter((tool) => tool !== id)
+        : [...prev, id]
+    );
+
+    setTool((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((tool) => tool !== id); 
+      } else {
+        return [...prev, id]; 
+      }
+    });
+  };
+
+ 
+
+
+
+  return (
+    <div className="border-gray-500 shadow-gray-200 shadow-xl flex gap-6 ml-60 p-3 px-4 text-2xl sticky top-0 ">
+      {toolItems.map(({icon,id}) => {
+        const isSelected = selectedItem.includes(id);
+        return (
+          <div
+            key={id}
+            className={`
+         ${isSelected ? "bg-gray-100 " : ""} 
+         hover:scale-110 w-9 h-9 flex items-center justify-center`}
+            onClick={() => toggleTools(id)}
+          >
+            <FontAwesomeIcon icon={icon} />
+          </div>
+        );
+      })}
+    </div>
   );
 }

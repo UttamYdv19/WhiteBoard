@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import { strokeColorContext } from "../../App";
+import React, { useContext, useEffect, useRef } from "react";
 import { Line } from "react-konva";
 
 export default function Eraser({ stageRef, lines, setLines, strokeWidth }) {
   const isDrawing = useRef(false);
+  const {sheetColor} = useContext(strokeColorContext)
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -50,7 +52,7 @@ export default function Eraser({ stageRef, lines, setLines, strokeWidth }) {
       stage.off("mousemove", onMouseMove);
       stage.off("mouseup", onMouseUp);
     };
-  }, [stageRef, setLines,strokeWidth]);
+  }, [stageRef, setLines,strokeWidth,sheetColor]);
 
   return (
     <>
@@ -60,12 +62,12 @@ export default function Eraser({ stageRef, lines, setLines, strokeWidth }) {
           <Line
             key={index}
             points={line.points}
-            stroke="white"
+            stroke={sheetColor}
             strokeWidth={line.strokeWidth}
             tension={0.5}
             lineCap="round"
             lineJoin="round"
-            globalCompositeOperation="destination-out" 
+            globalCompositeOperation="source-over" 
           />
         ))}
     </>
