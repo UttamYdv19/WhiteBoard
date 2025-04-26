@@ -5,8 +5,8 @@ import {
   SheetTrigger,
   SheetHeader,
   SheetTitle,
-} from "../ui/sheet";
-import { Button } from "../ui/button";
+} from "../../ui/sheet";
+import { Button } from "../../ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTrash,
@@ -15,20 +15,43 @@ import {
   faBars,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
-import { Slider } from "../ui/slider";
+import { Slider } from "../../ui/slider";
 import { strokeColorContext } from "../../App";
+import useExportImage from "../Export/useExportImage";
 
-export default function SideBar({ strokeWidth, setStrokeWidth }) {
-  const { strokeColor, setStrokeColor, sheetColor, setSheetColor } =
-    useContext(strokeColorContext);
+export default function SideBar() {
+  const {
+    strokeColor,
+    setStrokeColor,
+    sheetColor,
+    setSheetColor,
+    setSelectedItem,
+    strokeWidth,
+    setStrokeWidth,
+    stageRef,
+    setTool,
+    setLines,
+  } = useContext(strokeColorContext);
   const strokeColors = ["#000000", "#3B82F6", "#EF4444", "#10B981", "#D946EF"];
   const sheetColors = ["#ffffff", "#e5e5e5", "#d9f99d", "#fbbf24", "#bfdbfe"];
+
+  const [handleExport] = useExportImage(stageRef);
 
   const handleStrokeColor = (color) => {
     setStrokeColor(color);
   };
 
   const handleSheetColor = (color) => {
+    setLines((prev) =>
+      prev.map((line) =>
+        line.mode == "erase"
+          ? {
+              ...line,
+              strokeColor: color,
+            }
+          : line
+      )
+    );
     setSheetColor(color);
   };
 
@@ -95,11 +118,20 @@ export default function SideBar({ strokeWidth, setStrokeWidth }) {
           </div>
         </div>
         <div className=" py-4 flex flex-col gap-5  border-b border-gray-200 text-gray-600">
-          <span className="flex gap-3 items-center">
+          <span
+            className="flex gap-3 items-center cursor-pointer"
+            onClick={() => {
+              setTool([]);
+              setSelectedItem('');
+            }}
+          >
             <FontAwesomeIcon icon={faTrash} />
             reset Canvas
           </span>
-          <span className="flex gap-3 items-center">
+          <span
+            className="flex gap-3 items-center cursor-pointer"
+            onClick={() => handleExport()}
+          >
             <FontAwesomeIcon icon={faDownload} />
             Export Image
           </span>

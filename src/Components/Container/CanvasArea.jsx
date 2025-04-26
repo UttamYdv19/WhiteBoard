@@ -4,15 +4,14 @@ import Pen from "../ShapeCards/Pen";
 import RectangleShape from "../ShapeCards/RectangleShape";
 import CircleShape from "../ShapeCards/CircleShape";
 import ArrowShape from "../ShapeCards/ArrowShape";
-import Eraser from "../ShapeCards/Eraser";
 import { strokeColorContext } from "../../App";
 
-export default function CanvasArea({ tools, strokeWidth, stageRef }) {
+export default function CanvasArea() {
   const trRef = useRef();
-  const [lines, setLines] = useState([]);
   const [isSelected, setSelected] = useState(false);
   const [selectedShape, setSelectedShape] = useState(null);
-  const { sheetColor } = useContext(strokeColorContext);
+  const {strokeWidth, sheetColor,tools,stageRef ,setLines,lines} = useContext(strokeColorContext);
+
   const toolComponents = {
     pen: (
       <Pen
@@ -22,14 +21,14 @@ export default function CanvasArea({ tools, strokeWidth, stageRef }) {
         strokeWidth={strokeWidth}
       />
     ),
-    eraser: (
-      <Eraser
-        stageRef={stageRef}
-        lines={lines}
-        setLines={setLines}
-        strokeWidth={strokeWidth}
-      />
-    ),
+    // eraser: (
+    //   <Eraser
+    //     stageRef={stageRef}
+    //     lines={lines}
+    //     setLines={setLines}
+    //     strokeWidth={strokeWidth}
+    //   />
+    // ),
     rect: (
       <RectangleShape
         isSelected={isSelected}
@@ -59,6 +58,7 @@ export default function CanvasArea({ tools, strokeWidth, stageRef }) {
       />
     ),
   };
+
 
   useEffect(() => {
     if (isSelected && selectedShape) {

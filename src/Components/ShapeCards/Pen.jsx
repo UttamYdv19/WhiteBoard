@@ -2,9 +2,9 @@ import { strokeColorContext } from '../../App';
 import React, { useContext, useEffect, useRef } from 'react';
 import { Line } from 'react-konva';
 
-const Pen = ({ stageRef, lines, setLines ,strokeWidth}) => {
+const Pen = () => {
   const isDrawing = useRef(false);
-  const {strokeColor}=useContext(strokeColorContext)
+  const {strokeColor,selectedItem,sheetColor,setLines,lines,strokeWidth,stageRef}=useContext(strokeColorContext)
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -15,7 +15,7 @@ const Pen = ({ stageRef, lines, setLines ,strokeWidth}) => {
 
       setLines((prevLines) => [
         ...prevLines,
-        { points: [pos.x, pos.y] ,strokeWidth, strokeColor,mode:'draw',},
+        { points: [pos.x, pos.y] ,strokeWidth:strokeWidth, strokeColor:selectedItem =='eraser'?sheetColor:strokeColor ,mode:selectedItem=='eraser'?'erase':'draw',},
       ]);
     };
 
@@ -47,12 +47,11 @@ const Pen = ({ stageRef, lines, setLines ,strokeWidth}) => {
       stage.off('mousemove', onMouseMove);
       stage.off('mouseup', onMouseUp);
     };
-  }, [stageRef, setLines,strokeColor,strokeWidth]);
+  }, [stageRef, setLines,strokeColor,selectedItem,strokeWidth,sheetColor]);
 
   return (
     <>
-      {lines.filter((line)=>!line.mode || line.mode === 'draw')
-    .map((line, index) => (
+      {lines.map((line, index) => (
         <Line
           key={index}
           points={line.points}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLock,
@@ -13,12 +13,15 @@ import {
   faSquareCaretRight,
   faFont,
   faUsersRectangle,
+  faCircleUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 import useExportImage from "../Export/useExportImage";
+import { strokeColorContext } from "../../App";
 
-export default function Tools({ setTool, stageRef, tools }) {
-  const [selectedItem, setSelectedItem] = useState([]);
+export default function Tools() {
+  const { selectedItem, setSelectedItem, setTool, tools, stageRef } =
+    useContext(strokeColorContext);
   const [handleExport] = useExportImage(stageRef);
   const toolItems = [
     { icon: faLock, id: "lock" },
@@ -33,37 +36,38 @@ export default function Tools({ setTool, stageRef, tools }) {
     { icon: faSquareCaretLeft, id: "caret-left" },
     { icon: faSquareCaretRight, id: "caret-right" },
     { icon: faUsersRectangle, id: "users" },
+    { icon: faCircleUser, id: "signUp" },
   ];
 
   const toggleTools = (id) => {
-    if (id === faDownload) {
+   
+    if (id === "download") {
       handleExport();
       return;
     }
 
-    setSelectedItem((prev) =>
-      prev.includes(id)
-        ? prev.filter((tool) => tool !== id)
-        : [...prev, id]
-    );
+    if (id === "trash") {
+     setTool([])
+      return;
+    }
+    
+    if (id === "signUp") {
+      
+       return;
+     }
+
+
+    setSelectedItem(id);
 
     setTool((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((tool) => tool !== id); 
-      } else {
-        return [...prev, id]; 
-      }
+      return [...prev, id];
     });
   };
 
- 
-
-
-
   return (
-    <div className="border-gray-500 shadow-gray-200 shadow-xl flex gap-6 ml-60 p-3 px-4 text-2xl sticky top-0 ">
-      {toolItems.map(({icon,id}) => {
-        const isSelected = selectedItem.includes(id);
+    <div className="border-gray-500 shadow-gray-200 shadow-xl flex gap-6 ml-50 p-3 px-4 text-2xl sticky top-0 ">
+      {toolItems.map(({ icon, id }) => {
+        const isSelected = selectedItem === id;
         return (
           <div
             key={id}
