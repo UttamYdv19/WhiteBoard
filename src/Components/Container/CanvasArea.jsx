@@ -9,8 +9,17 @@ import { strokeColorContext } from "../../App";
 export default function CanvasArea() {
   const trRef = useRef();
   const [isSelected, setSelected] = useState(false);
-  const [selectedShape, setSelectedShape] = useState(null);
-  const {strokeWidth, sheetColor,tools,stageRef ,setLines,lines} = useContext(strokeColorContext);
+  const [selectedRef,setSelectedRef] = useState(null)
+  const {
+    strokeWidth,
+    sheetColor,
+    tools,
+    stageRef,
+    setLines,
+    lines,
+    setSelectedShape,
+    selectedShape,
+  } = useContext(strokeColorContext);
 
   const toolComponents = {
     pen: (
@@ -19,6 +28,7 @@ export default function CanvasArea() {
         lines={lines}
         setLines={setLines}
         strokeWidth={strokeWidth}
+        setSelectedRef={setSelectedRef}
       />
     ),
     // eraser: (
@@ -34,7 +44,7 @@ export default function CanvasArea() {
         isSelected={isSelected}
         setSelected={setSelected}
         selectedShape={selectedShape}
-        setSelectedShape={setSelectedShape}
+        setSelectedRef={setSelectedRef}
         trRef={trRef}
       />
     ),
@@ -44,6 +54,7 @@ export default function CanvasArea() {
         setSelected={setSelected}
         selectedShape={selectedShape}
         setSelectedShape={setSelectedShape}
+        setSelectedRef={setSelectedRef}
         trRef={trRef}
       />
     ),
@@ -53,13 +64,16 @@ export default function CanvasArea() {
         setSelected={setSelected}
         selectedShape={selectedShape}
         setSelectedShape={setSelectedShape}
+        setSelectedRef={setSelectedRef}
         trRef={trRef}
         strokeWidth={strokeWidth}
       />
     ),
   };
 
-
+  const handleClick = (uniqueId) => {
+    setSelectedShape(uniqueId)
+  };
   useEffect(() => {
     if (isSelected && selectedShape) {
       trRef.current.nodes([selectedShape]);
@@ -83,9 +97,22 @@ export default function CanvasArea() {
             fill={sheetColor}
             listening={false}
           />
-          {tools.map((tool) => (
-            <React.Fragment key={tool}>{toolComponents[tool]}</React.Fragment>
-          ))}
+          {tools.map(({ name, uniqueId }) => {
+            const Components = toolComponents[name];
+            if(!Components)
+              {
+                console.log(name);
+                return null
+              }
+              else{
+            return(<React.Fragment key={uniqueId}>
+              {React.cloneElement(toolComponents[name], {
+                uniqueId,
+                onClick: () => handleClick(uniqueId)
+              })}
+            </React.Fragment>)
+              }
+})}
         </Layer>
       </Stage>
     </>

@@ -4,14 +4,17 @@ import Home from "./Pages/Home/Home";
 import CanvasArea from "./Components/Container/CanvasArea";
 import { Route, Router, Routes,BrowserRouter } from "react-router-dom";
 import SignUp from "./Components/signUpForm/SignUp";
+import SignIn from "./Components/signInForm/SignIn";
 export const strokeColorContext = createContext(null);
 
 function App() {
-  const [tools, setTool] = useState([]);
+  const [tools, setTool] = useState([{name:"",uniqueId:""}]);
   const [strokeWidth, setStrokeWidth] = useState(5);
   const [strokeColor, setStrokeColor] = useState("#000000");
   const [sheetColor, setSheetColor] = useState("#ffffff");
   const [selectedItem, setSelectedItem] = useState('');
+  const [selectedShape, setSelectedShape] = useState(null);
+
   const [lines, setLines] = useState([{points:[],strokeColor:'',strokeWidth:'',mode:''}]);
 
   const stageRef = useRef(null);
@@ -32,7 +35,9 @@ function App() {
           setStrokeWidth,
           stageRef,
           lines,
-          setLines
+          setLines,
+          setSelectedShape,
+          selectedShape
         }}
       >
         <BrowserRouter>
@@ -46,6 +51,7 @@ function App() {
         </div>}
         />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} />
           </Routes>
         </BrowserRouter> 
       </strokeColorContext.Provider>

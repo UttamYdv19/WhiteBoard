@@ -1,8 +1,7 @@
 import { strokeColorContext } from "../../App";
 import { useContext } from "react";
 
-export default function useExportImage() {
-  const { stageRef} = useContext(strokeColorContext) 
+export default function useExportImage({stageRef}) {
   const downloadURI = (uri,name) =>
     {
       const link = document.createElement("a");

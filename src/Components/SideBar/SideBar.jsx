@@ -121,7 +121,7 @@ export default function SideBar() {
           <span
             className="flex gap-3 items-center cursor-pointer"
             onClick={() => {
-              setTool([]);
+              setTool([{name:"",uniqueId:""}]);
               setSelectedItem('');
             }}
           >

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { Rect, Transformer } from 'react-konva';
 
-export default function RectangleShape({isSelected,selectedShape,setSelected,setSelectedShape,trRef}) {
+export default function RectangleShape({isSelected,selectedShape,setSelected,setSelectedShape,trRef,uniqueId,onClick}) {
  const rectRef =useRef();
   return (
     <>
@@ -15,11 +15,11 @@ export default function RectangleShape({isSelected,selectedShape,setSelected,set
             stroke="black"
             onClick={() => {
             setSelected(true);
-              setSelectedShape(rectRef.current);
+             onClick(uniqueId);
           }}
           draggable
         />
-          {isSelected && selectedShape === rectRef.current && (
+          {isSelected && selectedShape === uniqueId && (
         <Transformer
           ref={trRef}
           boundBoxFunc={(oldBox, newBox) => {

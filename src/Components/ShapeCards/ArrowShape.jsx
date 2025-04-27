@@ -1,8 +1,10 @@
-import React, { useRef } from 'react'
+import { strokeColorContext } from '../../App';
+import React, { useContext, useRef } from 'react'
 import { Arrow, Transformer } from 'react-konva';
 
-export default function ArrowShape({isSelected,selectedShape,setSelected,setSelectedShape,trRef,isActive}) {
-    const arrowRef = useRef()
+export default function ArrowShape({isSelected,selectedShape,setSelected,setSelectedShape,trRef }) {
+    const arrowRef = useRef();
+    const { tools} = useContext(strokeColorContext)
 
   return (
     <>
@@ -16,7 +18,7 @@ export default function ArrowShape({isSelected,selectedShape,setSelected,setSele
             draggable
             onClick={() => {
               setSelected(true);
-              setSelectedShape(lineRef.current);
+              setSelectedShape(arrowRef.current);
             }}
           />
            {isSelected && selectedShape === arrowRef.current && (
