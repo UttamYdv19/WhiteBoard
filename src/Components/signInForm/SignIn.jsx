@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "../../ui/button";
 import { signInFormSchema } from "../../validation/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignIn() {
   const form = useForm({
@@ -27,12 +27,13 @@ export default function SignIn() {
   });
 
   const savedUser =JSON.parse( localStorage.getItem("user")) || "user";
-
+  const navigate = useNavigate();
   const onSubmit = (data) => {
     if (savedUser.email == data.email && savedUser.password == data.password)
       alert("login successfully !!");
     else alert("you do not have account. please create first");
     form.reset();
+    navigate('/')
   };
   return (
     <div className="flex justify-center items-center mt-50  ">

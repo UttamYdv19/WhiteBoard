@@ -14,8 +14,9 @@ function App() {
   const [sheetColor, setSheetColor] = useState("#ffffff");
   const [selectedItem, setSelectedItem] = useState('');
   const [selectedShape, setSelectedShape] = useState(null);
+  const [idArray,setIdArray] = useState([]);
 
-  const [lines, setLines] = useState([{points:[],strokeColor:'',strokeWidth:'',mode:''}]);
+  const [lines, setLines] = useState([{points:[],strokeColor:'',strokeWidth:'',mode:'',id:''}]);
 
   const stageRef = useRef(null);
 
@@ -37,7 +38,9 @@ function App() {
           lines,
           setLines,
           setSelectedShape,
-          selectedShape
+          selectedShape,
+          setIdArray,
+          idArray
         }}
       >
         <BrowserRouter>

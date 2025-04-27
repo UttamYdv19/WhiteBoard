@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "../../ui/button";
 import { signUpFormSchema } from "../../validation/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignUp() {
   const form = useForm({
@@ -25,11 +25,12 @@ export default function SignUp() {
       password: "",
     },
   });
-
+ const navigate = useNavigate();
   const onSubmit = (data) => {
     localStorage.setItem("user", JSON.stringify(data));
     alert("account created successfully !!");
     form.reset();
+    navigate('/')
   };
   return (
     <div className="flex justify-center items-center mt-50  ">

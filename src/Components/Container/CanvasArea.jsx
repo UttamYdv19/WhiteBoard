@@ -9,28 +9,12 @@ import { strokeColorContext } from "../../App";
 export default function CanvasArea() {
   const trRef = useRef();
   const [isSelected, setSelected] = useState(false);
-  const [selectedRef,setSelectedRef] = useState(null)
-  const {
-    strokeWidth,
-    sheetColor,
-    tools,
-    stageRef,
-    setLines,
-    lines,
-    setSelectedShape,
-    selectedShape,
-  } = useContext(strokeColorContext);
+  const [selectedRef, setSelectedRef] = useState(null);
+  const { strokeWidth, sheetColor, tools, stageRef, setSelectedShape } =
+    useContext(strokeColorContext);
 
   const toolComponents = {
-    pen: (
-      <Pen
-        stageRef={stageRef}
-        lines={lines}
-        setLines={setLines}
-        strokeWidth={strokeWidth}
-        setSelectedRef={setSelectedRef}
-      />
-    ),
+    pen: <Pen />,
     // eraser: (
     //   <Eraser
     //     stageRef={stageRef}
@@ -43,8 +27,8 @@ export default function CanvasArea() {
       <RectangleShape
         isSelected={isSelected}
         setSelected={setSelected}
-        selectedShape={selectedShape}
         setSelectedRef={setSelectedRef}
+        selectedRef={selectedRef}
         trRef={trRef}
       />
     ),
@@ -52,9 +36,8 @@ export default function CanvasArea() {
       <CircleShape
         isSelected={isSelected}
         setSelected={setSelected}
-        selectedShape={selectedShape}
-        setSelectedShape={setSelectedShape}
         setSelectedRef={setSelectedRef}
+        selectedRef={selectedRef}
         trRef={trRef}
       />
     ),
@@ -62,9 +45,8 @@ export default function CanvasArea() {
       <ArrowShape
         isSelected={isSelected}
         setSelected={setSelected}
-        selectedShape={selectedShape}
-        setSelectedShape={setSelectedShape}
         setSelectedRef={setSelectedRef}
+        selectedRef={selectedRef}
         trRef={trRef}
         strokeWidth={strokeWidth}
       />
@@ -72,14 +54,14 @@ export default function CanvasArea() {
   };
 
   const handleClick = (uniqueId) => {
-    setSelectedShape(uniqueId)
+    setSelectedShape(uniqueId);
   };
   useEffect(() => {
-    if (isSelected && selectedShape) {
-      trRef.current.nodes([selectedShape]);
+    if (isSelected && selectedRef) {
+      trRef.current.nodes([selectedRef]);
       trRef.current.getLayer().batchDraw();
     }
-  }, [isSelected, selectedShape]);
+  }, [isSelected, selectedRef]);
 
   return (
     <>
@@ -99,20 +81,19 @@ export default function CanvasArea() {
           />
           {tools.map(({ name, uniqueId }) => {
             const Components = toolComponents[name];
-            if(!Components)
-              {
-                console.log(name);
-                return null
-              }
-              else{
-            return(<React.Fragment key={uniqueId}>
-              {React.cloneElement(toolComponents[name], {
-                uniqueId,
-                onClick: () => handleClick(uniqueId)
-              })}
-            </React.Fragment>)
-              }
-})}
+            if (!Components) {
+              return null;
+            } else {
+              return (
+                <React.Fragment key={uniqueId}>
+                  {React.cloneElement(toolComponents[name], {
+                    uniqueId,
+                    onClick: () => handleClick(uniqueId),
+                  })}
+                </React.Fragment>
+              );
+            }
+          })}
         </Layer>
       </Stage>
     </>

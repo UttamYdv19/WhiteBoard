@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import {
   faLock,
   faSquare,
@@ -22,8 +22,17 @@ import { strokeColorContext } from "../../App";
 import { useNavigate } from "react-router-dom";
 
 export default function Tools() {
-  const { selectedItem, setSelectedItem, setTool, tools, setLines, stageRef } =
-    useContext(strokeColorContext);
+  const [undoArray,setUndoArray] = useState([]);
+  const {
+    selectedItem,
+    setSelectedItem,
+    setTool,
+    selectedShape,
+    setLines,
+    stageRef,
+    idArray,
+    setIdArray
+  } = useContext(strokeColorContext);
   const [handleExport] = useExportImage(stageRef);
   const navigate = useNavigate();
   const toolItems = [
@@ -49,9 +58,20 @@ export default function Tools() {
     }
 
     if (id === "trash") {
-      setTool([{name:"",uniqueId:""}]);
-      setLines([{ points: [], strokeColor: "", strokeWidth: "", mode: "" }]);
-      return;
+      
+      setTool((prev) =>
+        prev.filter((tool) => tool.uniqueId !== selectedShape)
+      );
+      return ;
+      // if (id == "pen" || id == "eraser") {
+      //   setLines((prev) => prev.filter((line) => line.id !== selectedShape));
+      //   return;
+      // } else {
+      //   setTool((prev) =>
+      //     prev.filter((tool) => tool.uniqueId !== selectedShape)
+      //   );
+      //   return;
+      // }
     }
 
     if (id === "signUp") {
@@ -60,22 +80,35 @@ export default function Tools() {
     }
 
     if (id === "caret-left") {
-      setTool((prev) => {
-        const lastIndex = prev.findIndex((item) => item.name === selectedItem);
-        if (lastIndex !== -1) {
-          const updatedTools = [...prev];
-          updatedTools.splice(lastIndex, 1);
-          return updatedTools;
-        }
-        return prev;
-      });
+      if(!idArray.length) return;
+      const lastIndexId =idArray[idArray.length-2]
+      setLines((prev)=>{
+        const prevLine = prev.filter((line)=>line.id == lastIndexId);
+        const newLine = prev.filter((line)=>line.id !== lastIndexId)
+        setUndoArray((prev)=>[...prev,prevLine])
+        return newLine ;
+      })
+      setIdArray(prev=>prev.slice(0,idArray.length-1));
+      
+      return;
+    }
+
+    if (id === "caret-right") {
+      if (undoArray.length === 0) return;
+      setLines((prev)=>{
+        const newLine = undoArray[undoArray.length-1]
+        console.log(newLine)
+        return [...prev,newLine] ;
+      })
+      setUndoArray(prev=>prev.slice(0,-1));
+      setIdArray((prev) => [...prev, newLine.id]);
       return;
     }
 
     setSelectedItem(id);
 
     setTool((prev) => {
-      return [...prev,{name:id,uniqueId: uuidv4()}];
+      return [...prev, { name: id, uniqueId: uuidv4() }];
     });
   };
   return (
